@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+	<head>
+		<meta charset="utf-8">
+		<title>Home - JS Shopping Cart</title>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+
+		<!-- ** JavaScript ** -->
+		<script src="products.js" charset="utf-8"></script>
+		<script src="purchased.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+
+
+				function load_products() {
+
+					var products_div = document.getElementById( "products_div" );
+
+					for( var x = 0; x < products.length; x++){
+
+						var div = document.createElement( "div" );
+						div.className = "product_container";
+
+						// Name
+						var h3 = document.createElement( "h3" );
+						h3.appendChild( document.createTextNode( products[x].name ) );
+						div.appendChild( h3 );
+						products_div.appendChild( div );
+
+						// Image
+						var img = document.createElement( "img" );
+						img.src = products[x].image + ".jpg";
+						img.className = "products_img"
+						div.appendChild( img );
+						products_div.appendChild( div );
+
+						// Price
+						var p = document.createElement( "p" );
+						p.appendChild( document.createTextNode( "$" + products[x].price ) );
+						div.appendChild( p );
+						products_div.appendChild( div );
+
+						// Details
+						var link = document.createElement( "a" );
+						link.href = "detail.html";
+
+						var details = document.createElement( "button" );
+						details.appendChild( document.createTextNode( "Details" ) );
+						details.className = "btn_details";
+						details.id = products[x].id;
+
+						link.appendChild( details );
+						div.appendChild( link );
+						products_div.appendChild( div );
+
+						details.onclick = function() {
+	            console.log( this.id + " clicked" );
+							document.cookie = "detail_item=" + this.id;
+						}
+
+						// Add to cart
+						var add2cart = document.createElement( "button" );
+						add2cart.appendChild( document.createTextNode( "Add to cart" ) );
+						add2cart.className = "btn_add2cart";
+						add2cart.id = products[x].id;
+						div.appendChild( add2cart );
+						products_div.appendChild( div );
+
+						add2cart.onclick = function() {
+	            console.log( this.id + " clicked" );
+							var purchased_items = load_purchased();
+							purchased_items.push( this.id );
+							save_purchased( purchased_items );
+							//alert( products[this.id].name + " added to cart!" );
+	          }
+
+					}
+
+				}//end load_products()
+
+				window.onload = function() {
+
+					// ** Load products into page **
+					load_products();
+
+				}//end onload()
+
+		</script>
+	</head>
+
+	<body>
+		<heading>
+
+			<h1>Home - JS Shopping Cart</h1>
+
+			<a href="cart.html"><button class="btn_cart">Cart &rarr;</button></a>
+
+		</heading>
+
+		<div id="content">
+
+				<div id="products_div"></div>
+
+		</div>
+	</body>
+</html>

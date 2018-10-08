@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Checkout - JS Shopping Cart</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+
+    <!-- ** JavaScript ** -->
+    <script src="products.js" charset="utf-8"></script>
+    <script src="purchased.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        clear_table = function( ) {
+            var table = document.getElementById( "cart_table" );
+            while(table.hasChildNodes( )) {
+                table.removeChild( table.firstChild );
+            }
+        }// end clear_table()
+
+        make_table = function( items ) {
+
+            // ** Load items into table and calc total **
+            var total = 0;
+
+            var table = document.getElementById("cart_table");
+
+						//Insert heading
+						var th_item = document.createElement( "th" );
+						th_item.appendChild( document.createTextNode( "Item" ) );
+						table.appendChild( th_item );
+
+						var th_price = document.createElement( "th" );
+						th_price.appendChild( document.createTextNode( "Price" ) );
+						table.appendChild( th_price );
+
+            for(var x = 0; x < items.length; x++){
+                //var tr = table.insertRow( x + 1 );
+              	//var item = tr.insertCell( 0 );
+                //var price = tr.insertCell( 1 );
+								var tr = table.insertRow( -1 );
+              	var item = tr.insertCell( -1 );
+                var price = tr.insertCell( -1 );
+								item.innerHTML = items[x].name;
+                price.innerHTML = "$" + items[x].price;
+
+                //total
+                total += ( items[x].price );
+
+            }//end build table loop
+
+            //insert total
+            var tr = table.insertRow( -1 );
+            var item = tr.insertCell( -1 );
+            var price = tr.insertCell( -1 );
+            item.innerHTML = "Total: ";
+            price.innerHTML = "$" + total;
+
+        }// end make_table()
+
+
+        function validate(){
+          var errors = new Array();
+
+          for( var x = 0; x < document.forms[0].elements.length; x++ ){
+            //text field
+            if( document.forms[0].elements[x].type == "text" ){
+              if( document.forms[0].elements[x].value == "" ){
+                //append error msg
+                errors.push( "The " + document.forms[0].elements[x].name + " field cant be blank" );
+                //change field class, red_field
+                document.forms[0].elements[x].className = "red_field";
+                //chenge label class, red_field
+                var label = document.getElementById( document.forms[0].elements[x].id + "_label" );
+                label.className = "red_field";
+              }
+            }
+            //select field
+            if( document.forms[0].elements[x].type == "select-one" ){
+              if( document.forms[0].elements[x].value == 0  ){
+                //append error msg
+                errors.push( "The " + document.forms[0].elements[x].name + " field cant be blank" );
+                //change field class, red_field
+                document.forms[0].elements[x].className = "red_field";
+                //chenge label class, red_field
+                var label = document.getElementById( document.forms[0].elements[x].id + "_label" );
+                label.className = "red_field";
+              }
+            }
+
+          }
+
+          //create onfocus and onblur functions for red_fields
+          var the_red_elements = document.getElementsByClassName( "red_field" );
+          var the_red_fields = new Array();
+
+          for( var z = 0; z < the_red_elements.length; z++ ){
+            var str = ( the_red_elements[z].id ).split("_");
+            if( (str[1] != "label") && (str[2] != "label") ){
+              the_red_fields.push(the_red_elements[z].id);
+            }
+          }
+
+          for( var x = 0 ; x < the_red_fields.length ; x++ ) {
+            var element = document.getElementById(the_red_fields[x]);
+
+            element.onfocus = function( ) {
+              console.log(this.id + " has been focused");
+              this.className = "";
+              document.getElementById(this.id + "_label").className = "";
+            }
+
+            element.onblur = function( ) {
+              console.log(this.id + " has been blurred");
+  						this.className = "";
+              document.getElementById(this.id + "_label").className = "";
+            }
+          }
+
+          if(errors.length == 0){
+            return true;
+          }else{
+            clear_errors();
+            show_errors( errors );
+            return false;
+          }
+        }// end validate()
+
+        function show_errors( errors ){
+          var errors_div = document.getElementById( "errors" );
+          for( var x = 0; x < errors.length; x++ ){
+            var error = document.createTextNode( errors[x] );
+            var p = document.createElement( "p" );
+            p.appendChild( error );
+            errors_div.appendChild( p );
+          }
+        }//end show_errors()
+
+        function clear_errors(){
+    			var div = document.getElementById( "errors" );
+
+    			while( div.hasChildNodes() ){
+    				div.removeChild( div.firstChild );
+    			}
+    		}// end clear_errors()
+
+
+        window.onload = function() {
+
+            // ** Get orders id form cookie **
+            var order = load_purchased();
+
+            // ** Load orders products from cookie id into items[] **
+            var items = new Array();
+            for( var x = 0; x < order.length; x++ ){
+                items.push( get_product( order[x] ) );
+            }
+
+            // ** Make table with items **
+            make_table( items );
+
+            // ** Form validation **
+            document.forms[0].onsubmit = validate;
+            // address checkbox
+            document.forms[0].elements[6].onclick = function(){
+              if( document.forms[0].elements[6].checked == true ){
+                document.forms[0].elements[7].value = document.forms[0].elements[2].value;
+                document.forms[0].elements[8].value = document.forms[0].elements[3].value;
+                document.forms[0].elements[9].value = document.forms[0].elements[4].value;
+                document.forms[0].elements[10].value = document.forms[0].elements[5].value;
+              }
+            }
+            //hidden fields
+            var form = document.getElementById( 'form_list' );
+            for( var x = 0; x < items.length; x++ ){
+              var input = document.createElement( 'input' );
+              input.type = "hidden"
+              input.name = "product" + ( x + 1);
+              input.value = items[x].id;
+              form.appendChild( input );
+            }
+
+
+        }//end window.onload()
+
+    </script>
+</head>
+<body>
+    <heading>
+
+        <h1>Checkout - JS Shopping Cart</h1>
+
+        <a href="cart.html"><button class="btn_cart">&larr; Cart</button></a>
+
+    </heading>
+
+    <div id="content">
+      <div class="left_side">
+        <table id="cart_table">
+
+        </table>
+      </div><!-- end left_side -->
+
+      <div class="right_side">
+      <div id="errors"></div>
+
+      <form action="https://suchnull.com/examples/echo" method="get" >
+      	<ol id="form_list">
+          <li>
+      			<label for="fname" id="fname_label">First name: </label>
+      			<input type="text" name="fname" id="fname"></input>
+      		</li>
+          <li>
+      			<label for="lname" id="lname_label">Last name: </label>
+      			<input type="text" name="lname" id="lname"></input>
+      		</li>
+          <li>
+      			<label for="saddress" id="saddress_label">Shipping Address: </label>
+      			<input type="text" name="saddress" id="saddress"></input>
+      		</li>
+          <li>
+      			<label for="scity" id="scity_label">Shipping City: </label>
+      			<input type="text" name="scity" id="scity"></input>
+      		</li>
+          <li>
+      			<label for="sstate" id="sstate_label">Shipping State: </label>
+      			<input type="text" name="sstate" id="sstate"></input>
+      		</li>
+          <li>
+      			<label for="szip" id="szip_label">Shipping Zip: </label>
+      			<input type="text" name="szip" id="szip"></input>
+      		</li>
+      		<li>
+      			<input type="checkbox" name="chk" id="chk"></input>
+      			<label for="chk" id="chk_label">Billing address same as Shipping: </label>
+      		</li>
+          <li>
+      			<label for="baddress" id="baddress_label">Billing Address: </label>
+      			<input type="text" name="baddress" id="baddress"></input>
+      		</li>
+          <li>
+      			<label for=="bcity" id="bcity_label">Billing City: </label>
+      			<input type="text" name="bcity" id="bcity"></input>
+      		</li>
+          <li>
+      			<label for="bstate" id="bstate_label">Billing State: </label>
+      			<input type="text" name="bstate" id="bstate"></input>
+      		</li>
+          <li>
+      			<label for="bzip" id="bzip_label">Billing Zip: </label>
+      			<input type="text" name="bzip" id="bzip"></input>
+      		</li>
+          <li>
+      			<label for="ccardtype" id="ccardtype_label">Credit Card Type: </label>
+      			<select name="ccardtype" id="ccardtype">
+      				<option value="0"></option>
+      				<option value="1">Visa</option>
+      				<option value="2">MasterCard</option>
+      			</select>
+      		</li>
+      		<li>
+      			<label for="ccardno" id="ccardno_label">Credit Card Number: </label>
+      			<input type="text" name="ccardno" id="ccardno"></input>
+      		</li>
+      		<li>
+      			<label for="ccardexp" id="ccardexp_label">Credit Card Expiration Date: </label>
+      			<input type="text" name="ccardexp" id="ccardexp"></input>
+      		</li>
+
+          <li>
+      		  <label for="submit" id="submit_label"></label>
+      		  <!-- <input type="submit" value="Submit &rarr;" id="submit"/> -->
+            <button type="submit" class="btn_cart" id="submit">Order &rarr;</button>
+          </li>
+
+      	</ol>
+      </form>
+      </div><!-- end right_side -->
+
+    </div><!-- end content -->
+</body>
+</html>

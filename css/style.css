@@ -1,0 +1,175 @@
+body {
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+heading{
+  overflow: hidden;
+  width: 100%;
+}
+
+.product_container {
+  float: left;
+  width: 30%;
+  min-width: 200px;
+  border: 1px solid #f2f2f2;
+  border-radius: 0px;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  overflow: hidden;
+}
+
+.products_img {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  border-radius: 80px;
+}
+
+.product_detail{
+  float: right;
+  width: 46%;
+  padding: 5px;
+  text-align:left;
+}
+
+.image_detail{
+  float: left;
+  width: 46%;
+  padding: 5px;
+}
+
+.detail_img {
+  box-shadow: 10px 10px 5px #888888;
+  width: 100%;
+}
+
+#form_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.right_side {
+  float: right;
+  width: 46%;
+  padding: 10px;
+}
+
+.left_side {
+  float: left;
+  width: 46%;
+  padding: 10px;
+}
+
+ol{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ol li{
+  margin: 5px 0;
+}
+
+#errors{
+ color: red;
+}
+
+input.red_field, select.red_field{
+  border: 1px solid red;
+  border-color: red;
+  margin: 0px;
+}
+
+label.red_field{
+  color: red;
+}
+
+/* ========== TABLE ========== */
+
+td {
+  width: 200px;
+  height: 50px;
+  text-align: center;
+  vertical-align: center;
+}
+
+th {
+  height: 50px;
+  text-align: center;
+  vertical-align: center;
+  color: #fff;
+  background-color: #3385ff;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ========== BUTTONS ========== */
+
+.btn_add2cart {
+  background-color: transparent;
+  color: #00b359;
+  border: 2px solid #00b359;
+  border-radius: 5px;
+  height: 30px;
+  width: 100px;
+  margin: 5px;
+  transition: all 0.5s ease 0s;
+}
+
+.btn_add2cart:hover {
+  background-color: #00b359;
+  color: #fff;
+}
+
+.btn_details {
+    background-color: transparent;
+    color: #3385ff;
+    border: 2px solid #3385ff;
+    border-radius: 5px;
+    height: 30px;
+    width: 100px;
+    margin: 5px;
+    transition: all 0.5s ease 0s;
+}
+
+.btn_details:hover {
+  background-color: #3385ff;
+  color: #fff;
+}
+
+.btn_cart {
+  background-color: transparent;
+  font-size: 20px;
+  color: #f45642;
+  border: 2px solid #f45642;
+  border-radius: 25px;
+  height: 30px;
+  width: 100px;
+  margin: 5px;
+  transition: all 0.5s ease 0s;
+}
+
+.btn_cart:hover {
+  background-color: #f45642;
+  color: #fff;
+}
+
+.btn_remove {
+  background-color: #f45642;
+  color: #fff;
+  border: 2px solid #f45642;
+  border-radius: 25px;
+  height: 20px;
+  width: 20px;
+  margin: 5px;
+  transition: all 0.5s ease 0s;
+}
+
+.btn_remove:hover {
+  background-color: #fff;
+  color: #f45642;
+}

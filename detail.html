@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+	<head>
+		<meta charset="utf-8">
+		<title>Detail - JS Shopping Cart</title>
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+
+		<!-- ** JavaScript ** -->
+		<script src="products.js" charset="utf-8"></script>
+		<script src="purchased.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+
+			function get_detail_cookie() {
+
+				var cookies = document.cookie;
+				var cookie = cookies.split( "; " );
+				for( var x = 0; x < cookie.length; x++){
+					var parts = cookie[x].split( "=" );
+					if( parts[0] == "detail_item" ){
+						return parts[1];
+					}
+				}
+
+				return false;
+
+			}// end get_display_cookie()
+
+			function display_detail( detail_item ) {
+				// ** Display image **
+				var img_div = document.getElementById( "image_detail" );
+				var img = document.createElement( "img" );
+				img.src = detail_item.image + ".jpg";
+				img.className = "detail_img";
+				img_div.appendChild( img );
+
+				// ** Display detail **
+				var detail_div = document.getElementById( "product_detail" );
+
+				// name
+				var name = document.createElement( "h3" );
+				name.appendChild( document.createTextNode( detail_item.name ) );
+				detail_div.appendChild( name );
+
+				// description
+				var description = document.createElement( "p" );
+				description.appendChild( document.createTextNode( detail_item.description ) );
+				detail_div.appendChild( description );
+
+				//price
+				var price = document.createElement( "p" );
+				price.appendChild( document.createTextNode( "$" + detail_item.price ) );
+				detail_div.appendChild( price );
+
+				// Back Home
+				var link = document.createElement( "a" );
+				link.href = "index.html";
+
+				var home = document.createElement( "button" );
+				home.appendChild( document.createTextNode( "Back Home" ) );
+				home.className = "btn_details";
+
+				link.appendChild( home );
+				detail_div.appendChild( link );
+
+				// Add to cart
+				var add2cart = document.createElement( "button" );
+				add2cart.appendChild( document.createTextNode( "Add to cart" ) );
+				add2cart.className = "btn_add2cart";
+				add2cart.id = detail_item.id;
+				detail_div.appendChild( add2cart );
+
+				add2cart.onclick = function() {
+					console.log( this.id + " clicked" );
+					var purchased_items = load_purchased();
+					purchased_items.push( this.id );
+					save_purchased( purchased_items );
+					//alert( get_product( this.id ).name + " added to cart!" );
+				}
+
+			}//end display_detail()
+
+			window.onload = function() {
+
+				// ** Get product object to display details **
+				var detail_id = get_detail_cookie();
+				var detail_item = get_product( detail_id );
+				display_detail( detail_item );
+
+			}// end window.onload()
+
+		</script>
+
+	</head>
+	<body>
+		<heading>
+
+			<h1>Display - JS Shopping Cart</h1>
+
+			<a href="cart.html"><button class="btn_cart">Cart &rarr;</button></a>
+
+		</heading>
+
+		<div id="content">
+
+			<div class="image_detail" id="image_detail"></div>
+
+			<div class="product_detail" id="product_detail"></div>
+
+		</div>
+	</body>
+</html>

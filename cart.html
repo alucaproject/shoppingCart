@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Cart - JS Shopping Cart</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+
+    <!-- ** JavaScript ** -->
+    <script src="products.js" charset="utf-8"></script>
+    <script src="purchased.js" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+
+        clear_table = function( ) {
+            var table = document.getElementById( "cart_table" );
+            while(table.hasChildNodes( )) {
+                table.removeChild( table.firstChild );
+            }
+        }
+
+        make_table = function( items ) {
+
+            // ** Load items into table and calc total **
+            var total = 0;
+
+            var table = document.getElementById("cart_table");
+
+						//Insert heading
+						var th_item = document.createElement( "th" );
+						th_item.appendChild( document.createTextNode( "Item" ) );
+						table.appendChild( th_item );
+
+						var th_price = document.createElement( "th" );
+						th_price.appendChild( document.createTextNode( "Price" ) );
+						table.appendChild( th_price );
+
+						var th_remove = document.createElement( "th" );
+						th_remove.appendChild( document.createTextNode( "Remove" ) );
+						table.appendChild( th_remove );
+
+            for(var x = 0; x < items.length; x++){
+                //var tr = table.insertRow( x + 1 );
+              	//var item = tr.insertCell( 0 );
+                //var price = tr.insertCell( 1 );
+								var tr = table.insertRow( -1 );
+              	var item = tr.insertCell( -1 );
+                var price = tr.insertCell( -1 );
+								item.innerHTML = items[x].name;
+                price.innerHTML = "$" + items[x].price;
+
+                //remove button
+                var remove_btn = document.createElement( "button" );
+								remove_btn.className = "btn_remove";
+								remove_btn.href = "#";
+								remove_btn.index = x;
+                var btn_text = document.createTextNode( "x" );
+                remove_btn.appendChild( btn_text );
+
+                var remove = tr.insertCell( 2 );
+                remove.appendChild( remove_btn );
+
+								remove_btn.onclick = function() {
+
+									items.delete(this.index);
+
+									var ids = new Array();
+									for( var x = 0; x < items.length; x++ ){
+										ids.push( items[x].id );
+									}
+
+									save_purchased( ids );
+									clear_table( );
+									make_table( items );
+									return false;
+								}
+
+                //total
+                total += ( items[x].price );
+
+            }//end build table loop
+
+            //insert total
+            var tr = table.insertRow( -1 );
+            var item = tr.insertCell( -1 );
+            var price = tr.insertCell( -1 );
+            item.innerHTML = "Total: ";
+            price.innerHTML = "$" + total;
+
+        }
+
+        window.onload = function() {
+
+            // ** Get orders id form cookie **
+            var order = load_purchased();
+
+            // ** Load orders products from cookie id into items[] **
+            var items = new Array();
+            for( var x = 0; x < order.length; x++ ){
+                items.push( get_product( order[x] ) );
+            }
+
+            make_table( items );
+
+            //Check that cart is not empty
+            var btn_checkout = document.getElementById( "btn_checkout" );
+            btn_checkout.onclick = function() {
+              order = load_purchased();
+              if( order.length == 0 ){
+                alert( " Your cart is empty! " );
+              }else{
+                window.location='checkout.html';
+              }
+            }
+
+        }//end window.onload()
+
+    </script>
+</head>
+<body>
+    <heading>
+
+        <h1>Cart - JS Shopping Cart</h1>
+
+        <a href="index.html"><button class="btn_cart">&larr; Home</button></a>
+
+    </heading>
+
+    <div id="content">
+
+        <table id="cart_table">
+
+        </table>
+
+        <button class="btn_cart" id="btn_checkout" >Order &rarr;</button>
+
+    </div>
+</body>
+</html>
